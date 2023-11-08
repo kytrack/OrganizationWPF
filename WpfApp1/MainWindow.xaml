@@ -41,8 +41,8 @@
         <ComboBox x:Name="cbFounded"
                   Grid.Row="1"
                   HorizontalAlignment="Left"
-                  VerticalAlignment="Center" SelectionChanged="cb_SelectionChanged" >
-            
+                  VerticalAlignment="Center"
+                  SelectionChanged="cb_SelectionChanged">
         </ComboBox>
 
         <ComboBox x:Name="cbCountry"

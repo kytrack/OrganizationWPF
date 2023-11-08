@@ -29,11 +29,16 @@ namespace WpfApp1
         public MainWindow()
         {
             InitializeComponent();
-            Betoltes("C:\\Users\\vedran.krisztian\\Desktop\\Teljesítmény\\organizations-100000.csv");
+            Betoltes("organizations-100000.csv");
             dgDatagrid.ItemsSource = szervezetek;
 
-            cbCountry.ItemsSource = szervezetek.Select(x => x.Country).OrderBy(x => x).Distinct().ToList();
-            cbFounded.ItemsSource = szervezetek.Select(x => x.Founded).OrderBy(x => x).Distinct().ToList();
+            var orszagok = szervezetek.Select(x => x.Country).OrderBy(x => x).Distinct().ToList();
+            orszagok.Insert(0, "Összes");
+            cbCountry.ItemsSource = orszagok;
+
+            var evszamok = szervezetek.Select(x => x.Founded.ToString()).OrderBy(x => x).Distinct().ToList();
+            evszamok.Insert(0, "Összes");
+            cbFounded.ItemsSource = evszamok;
             labTotalEmpl.Content = szervezetek.Sum(x => x.EmployeesNumber);
         }
 
@@ -50,11 +55,12 @@ namespace WpfApp1
 
         private void cb_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var szurtlista = szervezetek.Where(x => cbFounded.SelectedItem != null ? x.Founded.ToString() == cbFounded.SelectedItem.ToString() : x.Founded==x.Founded).
-                Where(x=> cbCountry.SelectedItem!=null ? x.Country == cbCountry.SelectedItem.ToString():x.Country==x.Country);
+            var szurtlista = szervezetek
+                .Where(x => cbFounded.SelectedItem != null ? (cbFounded.SelectedItem == "Összes" ? x.Founded == x.Founded : x.Founded.ToString() == cbFounded.SelectedItem.ToString()) : x.Founded == x.Founded)
+                .Where(x => cbCountry.SelectedItem != null ? (cbCountry.SelectedItem == "Összes" ? x.Country == x.Country : x.Country == cbCountry.SelectedItem.ToString()) : x.Country == x.Country);
 
-            dgDatagrid.ItemsSource= szurtlista;
-            labTotalEmpl.Content= szurtlista.Sum(x=>x.EmployeesNumber).ToString();
+            dgDatagrid.ItemsSource = szurtlista;
+            labTotalEmpl.Content = szurtlista.Sum(x => x.EmployeesNumber).ToString();
         }
     }
 }
